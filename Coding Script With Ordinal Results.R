@@ -528,21 +528,7 @@ cor_numVar <- cor_numVar[CorHigh, CorHigh]
 
 corrplot.mixed(cor_numVar, tl.col="black", tl.pos = "lt", tl.cex = 0.7,cl.cex = .7, number.cex=.7)
 
-#Getting Variable Importance with a Random Forest
-set.seed(2018)
-quick_RF <- randomForest(x=all[1:1460,-79], y=all$SalePrice[1:1460], ntree=100,importance=TRUE)
-imp_RF <- importance(quick_RF)
-imp_DF <- data.frame(Variables = row.names(imp_RF), MSE = imp_RF[,1])
-imp_DF <- imp_DF[order(imp_DF$MSE, decreasing = TRUE),]
-
-ggplot(imp_DF[1:20,], aes(x=reorder(Variables, MSE), y=MSE, fill=MSE)) + geom_bar(stat = 'identity') + labs(x = 'Variables', y= '% increase MSE if variable is randomly permuted') + coord_flip() + theme(legend.position="none")
-
-
-view(all[1:1460,-79])
-
-all[1:1460,-79]
-#**********************************************************Not Working, Maybe Dempsey can figure out
-
+#Graphing Imputed Variables
 s1 <- ggplot(data= all, aes(x=GrLivArea)) +
   geom_density() + labs(x='Square feet living area')
 s2 <- ggplot(data=all, aes(x=as.factor(TotRmsAbvGrd))) +
@@ -805,7 +791,6 @@ xgb_grid = expand.grid(
 )
 
 label_train <- all$SalePrice[!is.na(all$SalePrice)]
-#This isnt working
 length(test1)
 length(label_train)
 
@@ -844,9 +829,6 @@ write.csv(sub_avg, file = 'WolfeTones_5.csv', row.names = F)
 contest_entry <- data.frame(Id=test_labels,SalesPrice=(predictions_lasso))
 
 contest_entry
-
-
-
 
 write.csv(contest_entry,file='WolfeTones_Entry1.csv',row.names=F)
 
